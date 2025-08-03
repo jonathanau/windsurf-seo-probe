@@ -32,7 +32,7 @@
                 <div class="score-circle-container">
                     <div class="score-circle">
                         <div class="score-value" id="seoScore">0</div>
-                        <div class="score-label">SEO Score</div>
+                        <div class="score-label">Overall SEO Score</div>
                     </div>
                 </div>
                 <div class="score-details">
@@ -47,6 +47,88 @@
                     <div class="score-item">
                         <span class="score-count" id="errorCount">0</span>
                         <span class="score-text error">Errors</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Category Summaries -->
+            <div class="category-summaries">
+                <h2><i class="fas fa-chart-bar"></i> SEO Category Summary</h2>
+                <div class="categories-grid">
+                    <!-- Basic SEO Category -->
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon basic-seo">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3>Basic SEO</h3>
+                                <p>Title, description, and core elements</p>
+                            </div>
+                        </div>
+                        <div class="category-score">
+                            <div class="category-score-circle" id="basicSeoScore">
+                                <span class="category-score-value">0</span>
+                            </div>
+                            <div class="category-status" id="basicSeoStatus">Not analyzed</div>
+                        </div>
+                    </div>
+
+                    <!-- Social Media Category -->
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon social-media">
+                                <i class="fas fa-share-alt"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3>Social Media</h3>
+                                <p>Open Graph and Twitter Cards</p>
+                            </div>
+                        </div>
+                        <div class="category-score">
+                            <div class="category-score-circle" id="socialMediaScore">
+                                <span class="category-score-value">0</span>
+                            </div>
+                            <div class="category-status" id="socialMediaStatus">Not analyzed</div>
+                        </div>
+                    </div>
+
+                    <!-- Technical SEO Category -->
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon technical-seo">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3>Technical SEO</h3>
+                                <p>Viewport, canonical, structured data</p>
+                            </div>
+                        </div>
+                        <div class="category-score">
+                            <div class="category-score-circle" id="technicalSeoScore">
+                                <span class="category-score-value">0</span>
+                            </div>
+                            <div class="category-status" id="technicalSeoStatus">Not analyzed</div>
+                        </div>
+                    </div>
+
+                    <!-- Content Quality Category -->
+                    <div class="category-card">
+                        <div class="category-header">
+                            <div class="category-icon content-quality">
+                                <i class="fas fa-file-alt"></i>
+                            </div>
+                            <div class="category-info">
+                                <h3>Content Quality</h3>
+                                <p>Language, author, and content tags</p>
+                            </div>
+                        </div>
+                        <div class="category-score">
+                            <div class="category-score-circle" id="contentQualityScore">
+                                <span class="category-score-value">0</span>
+                            </div>
+                            <div class="category-status" id="contentQualityStatus">Not analyzed</div>
+                        </div>
                     </div>
                 </div>
             </div>

@@ -153,167 +153,221 @@ class SEOAnalyzer {
         let warnings = 0;
         let errors = 0;
 
-        // Title analysis
+        // Category scores
+        const categoryScores = {
+            basicSeo: { score: 0, maxScore: 30, items: [] },
+            socialMedia: { score: 0, maxScore: 25, items: [] },
+            technicalSeo: { score: 0, maxScore: 30, items: [] },
+            contentQuality: { score: 0, maxScore: 15, items: [] }
+        };
+
+        // Title analysis (Basic SEO)
         if (metaTags.title) {
             if (metaTags.title.length >= 30 && metaTags.title.length <= 60) {
-                analysis.push({
+                const item = {
                     type: 'passed',
                     title: 'Title Tag Length',
                     description: `Perfect! Title is ${metaTags.title.length} characters (30-60 recommended).`
-                });
+                };
+                analysis.push(item);
+                categoryScores.basicSeo.items.push(item);
+                categoryScores.basicSeo.score += 15;
                 score += 15;
                 passed++;
             } else if (metaTags.title.length > 0) {
-                analysis.push({
+                const item = {
                     type: 'warning',
                     title: 'Title Tag Length',
                     description: `Title is ${metaTags.title.length} characters. Recommended: 30-60 characters.`
-                });
+                };
+                analysis.push(item);
+                categoryScores.basicSeo.items.push(item);
+                categoryScores.basicSeo.score += 8;
                 score += 8;
                 warnings++;
             }
         } else {
-            analysis.push({
+            const item = {
                 type: 'error',
                 title: 'Missing Title Tag',
                 description: 'Title tag is missing. This is crucial for SEO.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.basicSeo.items.push(item);
             errors++;
         }
 
-        // Meta description analysis
+        // Meta description analysis (Basic SEO)
         if (metaTags.description) {
             if (metaTags.description.length >= 120 && metaTags.description.length <= 160) {
-                analysis.push({
+                const item = {
                     type: 'passed',
                     title: 'Meta Description Length',
                     description: `Perfect! Description is ${metaTags.description.length} characters (120-160 recommended).`
-                });
+                };
+                analysis.push(item);
+                categoryScores.basicSeo.items.push(item);
+                categoryScores.basicSeo.score += 15;
                 score += 15;
                 passed++;
             } else if (metaTags.description.length > 0) {
-                analysis.push({
+                const item = {
                     type: 'warning',
                     title: 'Meta Description Length',
                     description: `Description is ${metaTags.description.length} characters. Recommended: 120-160 characters.`
-                });
+                };
+                analysis.push(item);
+                categoryScores.basicSeo.items.push(item);
+                categoryScores.basicSeo.score += 8;
                 score += 8;
                 warnings++;
             }
         } else {
-            analysis.push({
+            const item = {
                 type: 'error',
                 title: 'Missing Meta Description',
                 description: 'Meta description is missing. This affects click-through rates.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.basicSeo.items.push(item);
             errors++;
         }
 
-        // Open Graph analysis
+        // Open Graph analysis (Social Media)
         if (metaTags.ogTitle && metaTags.ogDescription) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Open Graph Tags',
                 description: 'Open Graph title and description are present for social media sharing.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.socialMedia.items.push(item);
+            categoryScores.socialMedia.score += 15;
             score += 10;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'warning',
                 title: 'Open Graph Tags',
                 description: 'Missing Open Graph tags. These improve social media sharing appearance.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.socialMedia.items.push(item);
             warnings++;
         }
 
-        // Twitter Card analysis
+        // Twitter Card analysis (Social Media)
         if (metaTags.twitterCard) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Twitter Card',
                 description: 'Twitter Card meta tag is present.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.socialMedia.items.push(item);
+            categoryScores.socialMedia.score += 10;
             score += 5;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'warning',
                 title: 'Twitter Card',
                 description: 'Twitter Card meta tag is missing.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.socialMedia.items.push(item);
             warnings++;
         }
 
-        // Canonical URL analysis
+        // Canonical URL analysis (Technical SEO)
         if (metaTags.canonical) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Canonical URL',
                 description: 'Canonical URL is specified, helping prevent duplicate content issues.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
+            categoryScores.technicalSeo.score += 10;
             score += 10;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'warning',
                 title: 'Canonical URL',
                 description: 'Canonical URL is missing. Consider adding it to prevent duplicate content issues.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
             warnings++;
         }
 
-        // Viewport meta tag analysis
+        // Viewport meta tag analysis (Technical SEO)
         if (metaTags.viewport) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Mobile Viewport',
                 description: 'Viewport meta tag is present for mobile optimization.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
+            categoryScores.technicalSeo.score += 10;
             score += 5;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'error',
                 title: 'Missing Viewport Tag',
                 description: 'Viewport meta tag is missing. This affects mobile usability.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
             errors++;
         }
 
-        // Language attribute analysis
+        // Language attribute analysis (Content Quality)
         if (metaTags.language) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Language Declaration',
                 description: `Language is declared as "${metaTags.language}".`
-            });
+            };
+            analysis.push(item);
+            categoryScores.contentQuality.items.push(item);
+            categoryScores.contentQuality.score += 5;
             score += 5;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'warning',
                 title: 'Language Declaration',
                 description: 'HTML lang attribute is missing. This helps search engines understand content language.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.contentQuality.items.push(item);
             warnings++;
         }
 
-        // Structured data analysis
+        // Structured data analysis (Technical SEO)
         if (metaTags.structuredData.length > 0) {
-            analysis.push({
+            const item = {
                 type: 'passed',
                 title: 'Structured Data',
                 description: `Found ${metaTags.structuredData.length} structured data block(s). Great for rich snippets!`
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
+            categoryScores.technicalSeo.score += 10;
             score += 10;
             passed++;
         } else {
-            analysis.push({
+            const item = {
                 type: 'warning',
                 title: 'Structured Data',
                 description: 'No structured data found. Consider adding Schema.org markup for rich snippets.'
-            });
+            };
+            analysis.push(item);
+            categoryScores.technicalSeo.items.push(item);
             warnings++;
         }
 
@@ -322,7 +376,8 @@ class SEOAnalyzer {
             passed,
             warnings,
             errors,
-            items: analysis
+            items: analysis,
+            categoryScores
         };
     }
 
@@ -403,11 +458,70 @@ class SEOAnalyzer {
             analysisGrid.appendChild(analysisItem);
         });
 
+        // Update category summaries
+        this.displayCategorySummaries(analysis.categoryScores);
+
         // Update meta tags details
         this.displayMetaTags(metaTags);
 
         // Show results
         this.resultsContainer.style.display = 'block';
+    }
+
+    displayCategorySummaries(categoryScores) {
+        const categories = [
+            { id: 'basicSeo', name: 'Basic SEO', data: categoryScores.basicSeo },
+            { id: 'socialMedia', name: 'Social Media', data: categoryScores.socialMedia },
+            { id: 'technicalSeo', name: 'Technical SEO', data: categoryScores.technicalSeo },
+            { id: 'contentQuality', name: 'Content Quality', data: categoryScores.contentQuality }
+        ];
+
+        categories.forEach(category => {
+            const percentage = Math.round((category.data.score / category.data.maxScore) * 100);
+            const scoreElement = document.getElementById(`${category.id}Score`);
+            const statusElement = document.getElementById(`${category.id}Status`);
+            const cardElement = scoreElement.closest('.category-card');
+
+            // Update score circle
+            const scoreValue = scoreElement.querySelector('.category-score-value');
+            scoreValue.textContent = percentage;
+
+            // Determine status and styling
+            let status, statusClass, circleClass, cardClass;
+            if (percentage >= 90) {
+                status = 'Excellent';
+                statusClass = 'excellent';
+                circleClass = 'excellent';
+                cardClass = 'excellent';
+            } else if (percentage >= 70) {
+                status = 'Good';
+                statusClass = 'good';
+                circleClass = 'good';
+                cardClass = 'good';
+            } else if (percentage >= 50) {
+                status = 'Needs Work';
+                statusClass = 'warning';
+                circleClass = 'warning';
+                cardClass = 'warning';
+            } else {
+                status = 'Poor';
+                statusClass = 'poor';
+                circleClass = 'poor';
+                cardClass = 'poor';
+            }
+
+            // Update status text and styling
+            statusElement.textContent = status;
+            statusElement.className = `category-status ${statusClass}`;
+
+            // Update score circle styling
+            scoreElement.className = `category-score-circle ${circleClass}`;
+            const scoreDeg = (percentage / 100) * 360;
+            scoreElement.style.setProperty('--category-score-deg', `${scoreDeg}deg`);
+
+            // Update card styling
+            cardElement.className = `category-card ${cardClass}`;
+        });
     }
 
     displayMetaTags(metaTags) {

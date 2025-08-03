@@ -19,17 +19,23 @@ class SEOAnalyzer {
     }
 
     async analyzeWebsite() {
-        const url = this.urlInput.value.trim();
+        let url = this.urlInput.value.trim();
         
         if (!url) {
             this.showError('Please enter a valid URL');
             return;
         }
 
+        // Automatically add protocol if missing
+        url = this.normalizeUrl(url);
+        
         if (!this.isValidUrl(url)) {
-            this.showError('Please enter a valid URL (including http:// or https://)');
+            this.showError('Please enter a valid URL');
             return;
         }
+
+        // Update the input field with the normalized URL
+        this.urlInput.value = url;
 
         this.showLoading();
         this.hideError();
@@ -48,10 +54,23 @@ class SEOAnalyzer {
         }
     }
 
+    normalizeUrl(url) {
+        // Remove any leading/trailing whitespace
+        url = url.trim();
+        
+        // If URL doesn't start with http:// or https://, add https://
+        if (!url.match(/^https?:\/\//i)) {
+            url = 'https://' + url;
+        }
+        
+        return url;
+    }
+
     isValidUrl(string) {
         try {
-            new URL(string);
-            return true;
+            const url = new URL(string);
+            // Ensure it's http or https protocol
+            return url.protocol === 'http:' || url.protocol === 'https:';
         } catch (_) {
             return false;
         }

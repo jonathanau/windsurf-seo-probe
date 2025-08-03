@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SEO Meta Tags Analyzer</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-search"></i> SEO Meta Tags Analyzer</h1>
+            <p>Analyze and optimize your website's SEO meta tags with visual previews</p>
+        </header>
+
+        <div class="input-section">
+            <div class="url-input-container">
+                <input type="url" id="urlInput" placeholder="Enter website URL (e.g., https://example.com)" required>
+                <button id="analyzeBtn" class="analyze-btn">
+                    <i class="fas fa-search"></i> Analyze
+                </button>
+            </div>
+            <div class="loading" id="loading" style="display: none;">
+                <i class="fas fa-spinner fa-spin"></i> Analyzing website...
+            </div>
+        </div>
+
+        <div class="results-container" id="resultsContainer" style="display: none;">
+            <!-- SEO Score Overview -->
+            <div class="score-overview">
+                <div class="score-circle">
+                    <div class="score-value" id="seoScore">0</div>
+                    <div class="score-label">SEO Score</div>
+                </div>
+                <div class="score-details">
+                    <div class="score-item">
+                        <span class="score-count" id="passedCount">0</span>
+                        <span class="score-text passed">Passed</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-count" id="warningCount">0</span>
+                        <span class="score-text warning">Warnings</span>
+                    </div>
+                    <div class="score-item">
+                        <span class="score-count" id="errorCount">0</span>
+                        <span class="score-text error">Errors</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Sections -->
+            <div class="previews-grid">
+                <!-- Google Search Preview -->
+                <div class="preview-card">
+                    <h3><i class="fab fa-google"></i> Google Search Preview</h3>
+                    <div class="google-preview">
+                        <div class="google-url" id="googleUrl">https://example.com</div>
+                        <div class="google-title" id="googleTitle">Page Title</div>
+                        <div class="google-description" id="googleDescription">Meta description goes here...</div>
+                    </div>
+                </div>
+
+                <!-- Facebook Preview -->
+                <div class="preview-card">
+                    <h3><i class="fab fa-facebook"></i> Facebook Preview</h3>
+                    <div class="facebook-preview">
+                        <div class="facebook-image" id="facebookImage">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="facebook-content">
+                            <div class="facebook-title" id="facebookTitle">Page Title</div>
+                            <div class="facebook-description" id="facebookDescription">Description</div>
+                            <div class="facebook-url" id="facebookUrl">example.com</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Twitter Preview -->
+                <div class="preview-card">
+                    <h3><i class="fab fa-twitter"></i> Twitter Preview</h3>
+                    <div class="twitter-preview">
+                        <div class="twitter-image" id="twitterImage">
+                            <i class="fas fa-image"></i>
+                        </div>
+                        <div class="twitter-content">
+                            <div class="twitter-title" id="twitterTitle">Page Title</div>
+                            <div class="twitter-description" id="twitterDescription">Description</div>
+                            <div class="twitter-url" id="twitterUrl">example.com</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SEO Analysis Results -->
+            <div class="analysis-section">
+                <h2><i class="fas fa-chart-line"></i> SEO Analysis Results</h2>
+                <div class="analysis-grid" id="analysisGrid">
+                    <!-- Analysis items will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <!-- Meta Tags Details -->
+            <div class="meta-tags-section">
+                <h2><i class="fas fa-tags"></i> Meta Tags Details</h2>
+                <div class="meta-tags-container" id="metaTagsContainer">
+                    <!-- Meta tags will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <div class="error-message" id="errorMessage" style="display: none;">
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorText">An error occurred while analyzing the website.</span>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -104,13 +104,22 @@ body {
     padding: 30px;
     box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     display: flex;
+    flex-direction: column; /* Stack items vertically */
     align-items: center;
-    gap: 40px;
+    text-align: center;
+    gap: 20px;
+}
+
+.score-circle-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .score-circle {
-    width: 120px;
-    height: 120px;
+    width: 140px; /* Increased width */
+    height: 140px; /* Increased height */
     border-radius: 50%;
     background: conic-gradient(#4CAF50 0deg, #4CAF50 var(--score-deg, 0deg), #e1e5e9 var(--score-deg, 0deg));
     display: flex;
@@ -118,26 +127,33 @@ body {
     align-items: center;
     justify-content: center;
     position: relative;
+    margin: 0 auto 10px; /* Center the circle and add bottom margin */
 }
 
 .score-circle::before {
     content: '';
     position: absolute;
-    width: 80px;
-    height: 80px;
+    width: 100px; /* Increased size to match new circle size */
+    height: 100px; /* Increased size to match new circle size */
     background: white;
     border-radius: 50%;
 }
 
 .score-value {
-    font-size: 2rem;
+    font-size: 2.2rem; /* Slightly larger font */
     font-weight: bold;
     color: #333;
     z-index: 1;
+    line-height: 1; /* Ensure consistent line height */
+    margin-bottom: 5px; /* Add space between value and label */
 }
 
 .score-label {
-    font-size: 0.9rem;
+    font-size: 1rem;
+    font-weight: 600;
+    color: #555;
+    text-align: center;
+    margin-top: 5px;
     color: #666;
     z-index: 1;
 }

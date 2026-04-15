@@ -5,6 +5,8 @@ class SEOAnalyzer {
         this.loading = document.getElementById('loading');
         this.resultsContainer = document.getElementById('resultsContainer');
         this.errorMessage = document.getElementById('errorMessage');
+        this.lastAnalyzeTime = 0;
+        this.minAnalyzeInterval = 2000;
         
         this.initializeEventListeners();
     }
@@ -26,6 +28,12 @@ class SEOAnalyzer {
             return;
         }
 
+        const now = Date.now();
+        if (now - this.lastAnalyzeTime < this.minAnalyzeInterval) {
+            this.showError('Please wait before analyzing another URL');
+            return;
+        }
+
         // Automatically add protocol if missing
         url = this.normalizeUrl(url);
         
@@ -33,6 +41,13 @@ class SEOAnalyzer {
             this.showError('Please enter a valid URL');
             return;
         }
+
+        if (this.isPrivateUrl(url)) {
+            this.showError('Cannot analyze private or local network addresses');
+            return;
+        }
+
+        this.lastAnalyzeTime = Date.now();
 
         // Update the input field with the normalized URL
         this.urlInput.value = url;
@@ -47,7 +62,7 @@ class SEOAnalyzer {
             
             this.displayResults(metaTags, analysis, url);
         } catch (error) {
-            console.error('Analysis error:', error);
+            // Error details omitted to prevent information leakage
             this.showError('Unable to analyze the website. Please check the URL and try again.');
         } finally {
             this.hideLoading();
@@ -76,9 +91,37 @@ class SEOAnalyzer {
         }
     }
 
+    isPrivateUrl(string) {
+        try {
+            const url = new URL(string);
+            const hostname = url.hostname.toLowerCase();
+            
+            // Block localhost and loopback
+            if (hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1' || hostname.endsWith('.localhost')) {
+                return true;
+            }
+            
+            // Block private IPv4 ranges (10.x, 172.16-31.x, 192.168.x, 169.254.x)
+            const privateIpPattern = /^(10\.|172\.(1[6-9]|2[0-9]|3[01])\.|192\.168\.|169\.254\.)/;
+            if (privateIpPattern.test(hostname)) {
+                return true;
+            }
+            
+            // Block IPv6 unique local (fc00::/7) and link-local (fe80::/10)
+            if (hostname.startsWith('fc') || hostname.startsWith('fd') || hostname.startsWith('fe80')) {
+                return true;
+            }
+            
+            return false;
+        } catch (_) {
+            return false;
+        }
+    }
+
     async fetchWebsiteContent(url) {
-        // Since we can't directly fetch cross-origin content in a browser,
-        // we'll use a CORS proxy service for demonstration
+        // Uses a CORS proxy to fetch cross-origin content.
+        // NOTE: The proxy service can see and modify all fetched content.
+        // For production use, consider running your own proxy server.
         const proxyUrl = `https://api.allorigins.win/get?url=${encodeURIComponent(url)}`;
         
         const response = await fetch(proxyUrl);
@@ -87,6 +130,17 @@ class SEOAnalyzer {
         }
         
         const data = await response.json();
+        
+        // Validate proxy response structure
+        if (typeof data.contents !== 'string') {
+            throw new Error('Invalid response from proxy service');
+        }
+        
+        // Limit content size to prevent DoS (1MB)
+        if (data.contents.length > 1048576) {
+            throw new Error('Website content too large to analyze');
+        }
+        
         return data.contents;
     }
 
@@ -405,10 +459,18 @@ class SEOAnalyzer {
         document.getElementById('facebookUrl').textContent = domain;
         
         const facebookImage = document.getElementById('facebookImage');
+        facebookImage.replaceChildren();
         if (metaTags.ogImage) {
-            facebookImage.innerHTML = `<img src="${metaTags.ogImage}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+            const img = document.createElement('img');
+            img.src = metaTags.ogImage;
+            img.alt = 'Preview';
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+            img.onerror = () => img.remove();
+            facebookImage.appendChild(img);
         } else {
-            facebookImage.innerHTML = '<i class="fas fa-image"></i>';
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-image';
+            facebookImage.appendChild(icon);
         }
 
         // Update Twitter preview
@@ -417,11 +479,19 @@ class SEOAnalyzer {
         document.getElementById('twitterUrl').textContent = domain;
         
         const twitterImage = document.getElementById('twitterImage');
+        twitterImage.replaceChildren();
         if (metaTags.twitterImage || metaTags.ogImage) {
             const imageUrl = metaTags.twitterImage || metaTags.ogImage;
-            twitterImage.innerHTML = `<img src="${imageUrl}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+            const img = document.createElement('img');
+            img.src = imageUrl;
+            img.alt = 'Preview';
+            img.style.cssText = 'width: 100%; height: 100%; object-fit: cover;';
+            img.onerror = () => img.remove();
+            twitterImage.appendChild(img);
         } else {
-            twitterImage.innerHTML = '<i class="fas fa-image"></i>';
+            const icon = document.createElement('i');
+            icon.className = 'fas fa-image';
+            twitterImage.appendChild(icon);
         }
 
         // Update analysis results
@@ -450,8 +520,8 @@ class SEOAnalyzer {
                     <i class="${icon}"></i>
                 </div>
                 <div class="analysis-content">
-                    <h4>${item.title}</h4>
-                    <p>${item.description}</p>
+                    <h4>${this.escapeHtml(item.title)}</h4>
+                    <p>${this.escapeHtml(item.description)}</p>
                 </div>
             `;
             
